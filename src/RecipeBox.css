@@ -101,3 +101,9 @@ h1 {
   cursor: pointer;
   text-decoration: none;
 }
+
+.site-icon {
+  height: 50px;
+  width: 50px;
+  background-color: white;
+}

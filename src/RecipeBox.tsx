@@ -19,6 +19,10 @@ class Recipe {
     }
 }
 
+interface SaveRecipes {
+    data: Recipe[];
+}
+
 export default function RecipeBox() {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [currentItem, setCurrentItem] = useState(0);
@@ -34,12 +38,12 @@ export default function RecipeBox() {
             setRecipes(defaultRecipes);
         }
         else {
-            setRecipes(JSON.parse(existingRecipes).data);
+            setRecipes(((JSON.parse(existingRecipes) as unknown) as SaveRecipes).data);
         }
     }, []);
 
     const updatePreview = () => {
-        if (!recipes || recipes.length <= currentItem) {
+        if (recipes.length <= currentItem) {
             return '';
         }
 
@@ -61,7 +65,7 @@ export default function RecipeBox() {
     };
 
     const saveModal = () => {
-        const arr = recipes? [...recipes] : [];
+        const arr = [...recipes];
 
         let curIndex = currentItem;
         if (action === Actions.Delete) {
@@ -93,23 +97,19 @@ export default function RecipeBox() {
     };
 
     const editAction = () => {
-        if (recipes) {
-            setAction(Actions.Edit);
-            setEditRecipe(recipes[currentItem].recipe);
-            setEditName(recipes[currentItem].name);
-            setEditIndex(currentItem);
-            setShowModal(true);
-        }
+        setAction(Actions.Edit);
+        setEditRecipe(recipes[currentItem].recipe);
+        setEditName(recipes[currentItem].name);
+        setEditIndex(currentItem);
+        setShowModal(true);
     };
 
     const deleteAction = () => {
-        if (recipes) {
-            setAction(Actions.Delete);
-            setEditRecipe(recipes[currentItem].recipe);
-            setEditName(recipes[currentItem].name);
-            setEditIndex(currentItem);
-            setShowModal(true);
-        }
+        setAction(Actions.Delete);
+        setEditRecipe(recipes[currentItem].recipe);
+        setEditName(recipes[currentItem].name);
+        setEditIndex(currentItem);
+        setShowModal(true);
     };
 
     return (
@@ -118,7 +118,7 @@ export default function RecipeBox() {
                 <h1>Recipe Box</h1>
                 <div className="fixedBox30">
                     {recipes.map((r, i) => (
-                        <div key={i} onClick={() => setCurrentItem(i)}>
+                        <div key={i} onClick={() => {setCurrentItem(i)}}>
                             <p>{r.name}</p>
                             <hr />
                         </div>
@@ -139,24 +139,24 @@ export default function RecipeBox() {
                     <div className="myModalBackground">
                         <div className="myModal">
                             <h2>{action.toString()}
-                                <span className="myCloseBtn" onClick={() => setShowModal(false)}>
+                                <span className="myCloseBtn" onClick={() => {setShowModal(false)}}>
                                     &times;
                                 </span>
                             </h2>
                             <hr/>
                             <div className="myContent">
                                 <label>Recipe Name:
-                                    <input name="recipeName" type="text" className="form-control" value={editName} onChange={(e) => setEditName(e.target.value)}/>
+                                    <input name="recipeName" type="text" className="form-control" value={editName} onChange={(e) => {setEditName(e.target.value)}}/>
                                 </label>
                                 <label htmlFor="editor">Recipe Markdown (Markdown Previewer <a target="_blank" rel="noreferrer" href="/fccResponsiveWebDesign/markdownPreviewer.html">here</a>):</label>
-                                <textarea id="editor" rows={10} cols={150} className="form-control" onChange={(e) => setEditRecipe(e.target.value)} value={editRecipe}>
+                                <textarea id="editor" rows={10} cols={150} className="form-control" onChange={(e) => {setEditRecipe(e.target.value)}} value={editRecipe}>
                                 
                                 </textarea>
                             </div>
                             <hr />
                             <div className="myActions">
                                 <button type="button" className="btn btn-primary" onClick={saveModal}>{action == Actions.Delete? 'Confirm' : 'Save'}</button>
-                                <button type="button" className="btn btn-warning" onClick={() => setShowModal(false)}>Cancel</button>
+                                <button type="button" className="btn btn-warning" onClick={() => {setShowModal(false)}}>Cancel</button>
                             </div>
                         </div>
                     </div>
