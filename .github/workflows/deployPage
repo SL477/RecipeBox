@@ -1,0 +1,51 @@
+# From https://vitejs.dev/guide/static-deploy
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes to the default branch
+    push:
+      branches: ['main']
+
+  # Allows running from actions tag
+    workflow_dispatch:
+
+# Sets GitHub token permissions to allow deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  # Single deploy job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{  steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Install dependancies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Setup pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload dist repository
+          path: './dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
