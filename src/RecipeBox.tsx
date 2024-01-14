@@ -148,7 +148,7 @@ export default function RecipeBox() {
                                 <label>Recipe Name:
                                     <input name="recipeName" type="text" className="form-control" value={editName} onChange={(e) => {setEditName(e.target.value)}}/>
                                 </label>
-                                <label htmlFor="editor">Recipe Markdown (Markdown Previewer <a target="_blank" rel="noreferrer" href="/fccResponsiveWebDesign/markdownPreviewer.html">here</a>):</label>
+                                <label htmlFor="editor">Recipe Markdown (Markdown Previewer <a target="_blank" rel="noreferrer" href="/fccResponsiveWebDesign/markdownPreviewer">here</a>):</label>
                                 <textarea id="editor" rows={10} cols={150} className="form-control" onChange={(e) => {setEditRecipe(e.target.value)}} value={editRecipe}>
                                 
                                 </textarea>
